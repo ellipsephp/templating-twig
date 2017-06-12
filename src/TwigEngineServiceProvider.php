@@ -7,6 +7,7 @@ use Exception;
 use Interop\Container\ServiceProvider;
 
 use Twig_Loader_Filesystem;
+use Twig_Environment;
 
 use Ellipse\Contracts\Templating\EngineInterface;
 
@@ -33,7 +34,7 @@ class TwigEngineServiceProvider implements ServiceProvider
 
                 $loader = new Twig_Loader_Filesystem($path);
 
-                $twig = new Twig_Environment($loader, $options)
+                $twig = new Twig_Environment($loader, $options);
 
                 return new EngineAdapter($twig);
 
