@@ -19,9 +19,8 @@ class EngineAdapter implements EngineInterface
      * Set up a twig adapter with a twig loader instance and the twig options.
      *
      * @param \Twig_Environment $twig
-     * @param array             $options
      */
-    public function __construct(Twig_Environment $twig, array $options = [])
+    public function __construct(Twig_Environment $twig)
     {
         $this->twig = $twig;
     }

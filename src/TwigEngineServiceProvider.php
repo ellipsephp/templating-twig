@@ -35,7 +35,7 @@ class TwigEngineServiceProvider implements ServiceProvider
 
                 $twig = new Twig_Environment($loader, $options)
 
-                return new EngineAdapter($twig, $options);
+                return new EngineAdapter($twig);
 
             },
         ];
