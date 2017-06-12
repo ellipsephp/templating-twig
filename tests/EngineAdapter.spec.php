@@ -1,7 +1,5 @@
 <?php
 
-use Twig_Environment;
-
 use Ellipse\Contracts\Templating\EngineInterface;
 
 use Ellipse\Adapters\Templating\Twig\EngineAdapter;
