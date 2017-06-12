@@ -36,7 +36,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Ellipse\\Adapters\\Templating\\": "src"
+            "Ellipse\\Adapters\\Templating\\Twig\\": "src"
         }
     },
     "extra": {
@@ -46,7 +46,7 @@
         "bindings": {
             "classes": {
                 "service-providers": [
-                    "Ellipse\\Adapters\\Templating\\TwigEngineServiceProvider"
+                    "Ellipse\\Adapters\\Templating\\Twig\\TwigEngineServiceProvider"
                 ]
             }
         }

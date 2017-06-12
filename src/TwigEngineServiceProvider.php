@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Ellipse\Adapters\Templating;
+namespace Ellipse\Adapters\Templating\Twig;
 
 use Exception;
 
@@ -31,7 +31,9 @@ class TwigEngineServiceProvider implements ServiceProvider
 
                 }
 
-                $twig = new Twig_Loader_Filesystem($path);
+                $loader = new Twig_Loader_Filesystem($path);
+
+                $twig = new Twig_Environment($loader, $options)
 
                 return new EngineAdapter($twig, $options);
 
