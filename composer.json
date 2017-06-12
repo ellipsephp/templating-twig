@@ -1,0 +1,54 @@
+{
+    "name": "ellipse/templating-twig",
+    "type": "library",
+    "description": "The twig adapter of the ellipse template engine",
+    "keywords": [
+        "template",
+        "templating",
+        "twig"
+    ],
+    "license": "MIT",
+    "homepage": "https://github.com/ellipsephp/templating-twig",
+    "support": {
+        "issues": "https://github.com/ellipsephp/templating-twig/issues",
+        "source": "https://github.com/ellipsephp/templating-twig"
+    },
+    "authors": [
+        {
+            "name": "pmall",
+            "email": "pierre.mallinjoud@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=7.1",
+        "psr/http-message": "^1.0",
+        "container-interop/service-provider": "^0.3.0",
+        "ellipse/contracts-templating": "^1.0",
+        "ellipse/binder": "^1.0",
+        "twig/twig": "^2.4"
+    },
+    "require-dev": {
+        "peridot-php/peridot": "^1.19",
+        "peridot-php/leo": "^1.6",
+        "mockery/mockery": "^1.0@alpha"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ellipse\\Adapters\\Templating\\": "src"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        },
+        "bindings": {
+            "classes": {
+                "service-providers": [
+                    "Ellipse\\Adapters\\Templating\\TwigEngineServiceProvider"
+                ]
+            }
+        }
+    }
+}
