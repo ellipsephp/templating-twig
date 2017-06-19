@@ -14,7 +14,7 @@ class TwigEngineServiceProvider implements ServiceProvider
     public function getServices()
     {
         return [
-            EngineInterface::class => function ($container) {
+            Twig_Environment::class => function ($container) {
 
                 $path = $container->get('templating.path');
 
@@ -24,7 +24,13 @@ class TwigEngineServiceProvider implements ServiceProvider
 
                 $loader = new Twig_Loader_Filesystem($path);
 
-                $twig = new Twig_Environment($loader, $options);
+                return new Twig_Environment($loader, $options);
+
+            },
+
+            EngineInterface::class => function ($container) {
+
+                $twig = $container->get(Twig_Environment::class);
 
                 return new EngineAdapter($twig);
 
