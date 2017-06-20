@@ -26,9 +26,7 @@ class TwigEngineServiceProvider implements ServiceProvider
 
                 $loader = $container->get(Twig_Loader_Filesystem::class);
 
-                $options = $container->has('templating.options')
-                    ? $container->get('templating.options')
-                    : [];
+                $options = $container->get('templating.options');
 
                 return new Twig_Environment($loader, $options);
 
