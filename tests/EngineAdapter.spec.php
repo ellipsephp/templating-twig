@@ -8,15 +8,32 @@ describe('EngineAdapter', function () {
 
     beforeEach(function () {
 
+        $this->loader = Mockery::mock(Twig_Loader_Filesystem::class);
         $this->decorated = Mockery::mock(Twig_Environment::class);
 
-        $this->engine = new EngineAdapter($this->decorated);
+        $this->engine = new EngineAdapter($this->loader, $this->decorated);
 
     });
 
     it('should implement EngineInterface', function () {
 
         expect($this->engine)->to->be->an->instanceof(EngineInterface::class);
+
+    });
+
+    describe('->registerNamespace()', function () {
+
+        it('should proxy the underlying twig engine addFunction method', function () {
+
+            $namespace = 'namespace';
+            $path = 'path';
+
+            $this->loader->shouldReceive('addPath')->once()
+                ->with($path, $namespace);
+
+            $this->engine->registerNamespace($namespace, $path);
+
+        });
 
     });
 

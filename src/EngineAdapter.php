@@ -2,6 +2,7 @@
 
 namespace Ellipse\Adapters\Templating\Twig;
 
+use Twig_Loader_Filesystem;
 use Twig_Environment;
 use Twig_Function;
 
@@ -9,6 +10,13 @@ use Ellipse\Contracts\Templating\EngineInterface;
 
 class EngineAdapter implements EngineInterface
 {
+    /**
+     * The underlying twig loader.
+     *
+     * @var \Twig_Loader_Filesystem
+     */
+    private $loader;
+
     /**
      * The underlying twig instance.
      *
@@ -21,9 +29,18 @@ class EngineAdapter implements EngineInterface
      *
      * @param \Twig_Environment $twig
      */
-    public function __construct(Twig_Environment $twig)
+    public function __construct(Twig_Loader_Filesystem $loader, Twig_Environment $twig)
     {
+        $this->loader = $loader;
         $this->twig = $twig;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function registerNamespace(string $namespace, string $path): void
+    {
+        $this->loader->addPath($path, $namespace);
     }
 
     /**
