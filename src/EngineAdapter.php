@@ -3,6 +3,7 @@
 namespace Ellipse\Adapters\Templating\Twig;
 
 use Twig_Environment;
+use Twig_Function;
 
 use Ellipse\Contracts\Templating\EngineInterface;
 
@@ -23,6 +24,14 @@ class EngineAdapter implements EngineInterface
     public function __construct(Twig_Environment $twig)
     {
         $this->twig = $twig;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function registerFunction(string $name, callable $cb): void
+    {
+        $this->twig->addFunction(new Twig_Function($name, $cb));
     }
 
     /**
