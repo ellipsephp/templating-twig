@@ -1,6 +1,6 @@
 <?php
 
-use Ellipse\Contracts\Templating\EngineInterface;
+use Ellipse\Contracts\Templating\EngineAdapterInterface;
 
 use Ellipse\Adapters\Templating\Twig\EngineAdapter;
 
@@ -15,9 +15,9 @@ describe('EngineAdapter', function () {
 
     });
 
-    it('should implement EngineInterface', function () {
+    it('should implement EngineAdapterInterface', function () {
 
-        expect($this->engine)->to->be->an->instanceof(EngineInterface::class);
+        expect($this->engine)->to->be->an->instanceof(EngineAdapterInterface::class);
 
     });
 

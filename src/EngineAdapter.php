@@ -6,9 +6,9 @@ use Twig_Loader_Filesystem;
 use Twig_Environment;
 use Twig_Function;
 
-use Ellipse\Contracts\Templating\EngineInterface;
+use Ellipse\Contracts\Templating\EngineAdapterInterface;
 
-class EngineAdapter implements EngineInterface
+class EngineAdapter implements EngineAdapterInterface
 {
     /**
      * The underlying twig loader.

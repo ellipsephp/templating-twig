@@ -7,13 +7,14 @@ use Interop\Container\ServiceProvider;
 use Twig_Loader_Filesystem;
 use Twig_Environment;
 
-use Ellipse\Contracts\Templating\EngineInterface;
+use Ellipse\Contracts\Templating\EngineAdapterInterface;
 
 class TwigEngineServiceProvider implements ServiceProvider
 {
     public function getServices()
     {
         return [
+            // Provides a Twig_Loader_Filesystem implementation.
             Twig_Loader_Filesystem::class => function ($container) {
 
                 $path = $container->get('templating.path');
@@ -22,6 +23,7 @@ class TwigEngineServiceProvider implements ServiceProvider
 
             },
 
+            // Provides a Twig_Environment implementation.
             Twig_Environment::class => function ($container) {
 
                 $loader = $container->get(Twig_Loader_Filesystem::class);
@@ -32,7 +34,8 @@ class TwigEngineServiceProvider implements ServiceProvider
 
             },
 
-            EngineInterface::class => function ($container) {
+            // Provides a Twig engine adapter.
+            EngineAdapterInterface::class => function ($container) {
 
                 $loader = $container->get(Twig_Loader_Filesystem::class);
                 $twig = $container->get(Twig_Environment::class);
