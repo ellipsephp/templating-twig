@@ -2,6 +2,7 @@
 
 use Twig\Loader\LoaderInterface;
 use Twig\TwigFunction;
+use Twig\ExtensionInterface;
 
 use Ellipse\Contracts\Templating\EngineAdapterInterface;
 
@@ -32,7 +33,7 @@ describe('EngineAdapter', function () {
 
     describe('->registerNamespace()', function () {
 
-        it('should proxy the underlying twig engine addFunction method', function () {
+        it('should proxy the underlying twig engine ->addFunction() method', function () {
 
             $namespace = 'namespace';
             $path = 'path';
@@ -48,7 +49,7 @@ describe('EngineAdapter', function () {
 
     describe('->registerFunction()', function () {
 
-        it('should proxy the underlying twig engine addFunction method', function () {
+        it('should proxy the underlying twig engine ->addFunction() method', function () {
 
             $name = 'name';
             $cb = function () {};
@@ -64,9 +65,26 @@ describe('EngineAdapter', function () {
 
     });
 
+    describe('->registerExtension()', function () {
+
+        it('should proxy the underlying twig engine ->addExtension() method', function () {
+
+            $extension = Mockery::mock(ExtensionInterface::class);
+
+            $this->twig->shouldReceive('addExtension')->once()
+                ->with($extension);
+
+            $engine = new EngineAdapter($this->loader);
+
+            $engine->registerExtension($extension);
+
+        });
+
+    });
+
     describe('->render()', function () {
 
-        it('should proxy the underlying twig engine render method', function () {
+        it('should proxy the underlying twig engine ->render() method', function () {
 
             $name = 'name';
             $data = ['data'];

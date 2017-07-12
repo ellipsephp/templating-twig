@@ -55,6 +55,14 @@ class EngineAdapter implements EngineAdapterInterface
     /**
      * @inheritdoc
      */
+    public function registerExtension($extension): void
+    {
+        $this->twig->addExtension($extension);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function render(string $file, array $data = []): string
     {
         return $this->twig->render($file, $data);
