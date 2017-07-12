@@ -1,5 +1,8 @@
 <?php
 
+use Twig\Loader\LoaderInterface;
+use Twig\TwigFunction;
+
 use Ellipse\Contracts\Templating\EngineAdapterInterface;
 
 use Ellipse\Adapters\Templating\Twig\EngineAdapter;
@@ -8,10 +11,16 @@ describe('EngineAdapter', function () {
 
     beforeEach(function () {
 
-        $this->loader = Mockery::mock(Twig_Loader_Filesystem::class);
-        $this->decorated = Mockery::mock(Twig_Environment::class);
+        $this->loader = Mockery::mock(LoaderInterface::class);
+        $this->twig = Mockery::mock('overload:' . \Twig\Environment::class);
 
-        $this->engine = new EngineAdapter($this->loader, $this->decorated);
+        $this->engine = new EngineAdapter($this->loader);
+
+    });
+
+    afterEach(function () {
+
+        Mockery::close();
 
     });
 
@@ -44,10 +53,12 @@ describe('EngineAdapter', function () {
             $name = 'name';
             $cb = function () {};
 
-            $this->decorated->shouldReceive('addFunction')->once()
-                ->with(Mockery::type(Twig_Function::class));
+            $this->twig->shouldReceive('addFunction')->once()
+                ->with(Mockery::type(TwigFunction::class));
 
-            $this->engine->registerFunction($name, $cb);
+            $engine = new EngineAdapter($this->loader);
+
+            $engine->registerFunction($name, $cb);
 
         });
 
@@ -61,11 +72,13 @@ describe('EngineAdapter', function () {
             $data = ['data'];
             $expected = 'expected';
 
-            $this->decorated->shouldReceive('render')->once()
+            $this->twig->shouldReceive('render')->once()
                 ->with($name, $data)
                 ->andReturn($expected);
 
-            $test = $this->engine->render($name, $data);
+            $engine = new EngineAdapter($this->loader);
+
+            $test = $engine->render($name, $data);
 
             expect($test)->to->be->equal($expected);
 

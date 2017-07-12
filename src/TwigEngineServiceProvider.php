@@ -4,8 +4,8 @@ namespace Ellipse\Adapters\Templating\Twig;
 
 use Interop\Container\ServiceProvider;
 
-use Twig_Loader_Filesystem;
-use Twig_Environment;
+use Twig\Loader\LoaderInterface;
+use Twig\Loader\FilesystemLoader;
 
 use Ellipse\Contracts\Templating\EngineAdapterInterface;
 
@@ -14,33 +14,30 @@ class TwigEngineServiceProvider implements ServiceProvider
     public function getServices()
     {
         return [
-            // Provides a Twig_Loader_Filesystem implementation.
-            Twig_Loader_Filesystem::class => function ($container) {
+            // Provides a twig loader implementation. Can be overrided by the
+            // end user.
+            LoaderInterface::class => function ($container, $previous = null) {
 
-                $path = $container->get('templating.path');
+                if (is_null($previous)) {
 
-                return new Twig_Loader_Filesystem($path);
+                    $path = $container->get('templating.path');
 
-            },
+                    return new FilesystemLoader($path);
 
-            // Provides a Twig_Environment implementation.
-            Twig_Environment::class => function ($container) {
+                }
 
-                $loader = $container->get(Twig_Loader_Filesystem::class);
-
-                $options = $container->get('templating.options');
-
-                return new Twig_Environment($loader, $options);
+                return $previous();
 
             },
 
-            // Provides a Twig engine adapter.
+            // Provides an engine adapter interface using the twig loader and
+            // the templating options.
             EngineAdapterInterface::class => function ($container) {
 
-                $loader = $container->get(Twig_Loader_Filesystem::class);
-                $twig = $container->get(Twig_Environment::class);
+                $loader = $container->get(LoaderInterface::class);
+                $options = $container->get('templating.options');
 
-                return new EngineAdapter($loader, $twig);
+                return new EngineAdapter($loader, $options);
 
             },
         ];
