@@ -1,8 +1,9 @@
 <?php
 
 use Twig\Loader\LoaderInterface;
+use Twig\Environment;
 use Twig\TwigFunction;
-use Twig\ExtensionInterface;
+use Twig\Extension\ExtensionInterface;
 
 use Ellipse\Contracts\Templating\EngineAdapterInterface;
 
@@ -13,9 +14,9 @@ describe('EngineAdapter', function () {
     beforeEach(function () {
 
         $this->loader = Mockery::mock(LoaderInterface::class);
-        $this->twig = Mockery::mock('overload:' . \Twig\Environment::class);
+        $this->environment = Mockery::mock(Environment::class);
 
-        $this->engine = new EngineAdapter($this->loader);
+        $this->engine = new EngineAdapter($this->loader, $this->environment);
 
     });
 
@@ -31,17 +32,28 @@ describe('EngineAdapter', function () {
 
     });
 
+    describe('::withPath()', function () {
+
+        it('should return a new EngineAdapter', function () {
+
+            $path = sys_get_temp_dir();
+
+            $test = EngineAdapter::withPath($path);
+
+            expect($test)->to->be->an->instanceof($test);
+
+        });
+
+    });
+
     describe('->registerNamespace()', function () {
 
-        it('should proxy the underlying twig engine ->addFunction() method', function () {
-
-            $namespace = 'namespace';
-            $path = 'path';
+        it('should proxy the underlying loader ->addPath() method', function () {
 
             $this->loader->shouldReceive('addPath')->once()
-                ->with($path, $namespace);
+                ->with('path', 'namespace');
 
-            $this->engine->registerNamespace($namespace, $path);
+            $this->engine->registerNamespace('namespace', 'path');
 
         });
 
@@ -49,17 +61,12 @@ describe('EngineAdapter', function () {
 
     describe('->registerFunction()', function () {
 
-        it('should proxy the underlying twig engine ->addFunction() method', function () {
+        it('should proxy the underlying twig environment ->addFunction() method', function () {
 
-            $name = 'name';
-            $cb = function () {};
-
-            $this->twig->shouldReceive('addFunction')->once()
+            $this->environment->shouldReceive('addFunction')->once()
                 ->with(Mockery::type(TwigFunction::class));
 
-            $engine = new EngineAdapter($this->loader);
-
-            $engine->registerFunction($name, $cb);
+            $this->engine->registerFunction('name', function () {});
 
         });
 
@@ -67,16 +74,14 @@ describe('EngineAdapter', function () {
 
     describe('->registerExtension()', function () {
 
-        it('should proxy the underlying twig engine ->addExtension() method', function () {
+        it('should proxy the underlying twig environment ->addExtension() method', function () {
 
             $extension = Mockery::mock(ExtensionInterface::class);
 
-            $this->twig->shouldReceive('addExtension')->once()
+            $this->environment->shouldReceive('addExtension')->once()
                 ->with($extension);
 
-            $engine = new EngineAdapter($this->loader);
-
-            $engine->registerExtension($extension);
+            $this->engine->registerExtension($extension);
 
         });
 
@@ -84,21 +89,15 @@ describe('EngineAdapter', function () {
 
     describe('->render()', function () {
 
-        it('should proxy the underlying twig engine ->render() method', function () {
+        it('should proxy the underlying twig environment ->render() method', function () {
 
-            $name = 'name';
-            $data = ['data'];
-            $expected = 'expected';
+            $this->environment->shouldReceive('render')->once()
+                ->with('name', ['data'])
+                ->andReturn('contents');
 
-            $this->twig->shouldReceive('render')->once()
-                ->with($name, $data)
-                ->andReturn($expected);
+            $test = $this->engine->render('name', ['data']);
 
-            $engine = new EngineAdapter($this->loader);
-
-            $test = $engine->render($name, $data);
-
-            expect($test)->to->be->equal($expected);
+            expect($test)->to->be->equal('contents');
 
         });
 

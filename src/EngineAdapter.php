@@ -3,6 +3,7 @@
 namespace Ellipse\Adapters\Templating\Twig;
 
 use Twig\Loader\LoaderInterface;
+use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
 use Twig\TwigFunction;
 
@@ -11,7 +12,7 @@ use Ellipse\Contracts\Templating\EngineAdapterInterface;
 class EngineAdapter implements EngineAdapterInterface
 {
     /**
-     * The underlying twig loader.
+     * The twig loader.
      *
      * @var \Twig\Loader\LoaderInterface
      */
@@ -22,18 +23,47 @@ class EngineAdapter implements EngineAdapterInterface
      *
      * @var \Twig\Environment
      */
-    private $twig;
+    private $environment;
 
     /**
-     * Set up a twig adapter with a twig loader instance and the twig options.
+     * Create a new twig adapter with the given path and options.
      *
-     * @param \Twig\Loader\LoaderInterface  $loader
-     * @param array                         $options
+     * @param string    $path
+     * @param array     $options
+     * @return \Ellipse\Adapters\Templating\Twig\EngineAdapter
      */
-    public function __construct(LoaderInterface $loader, array $options = [])
+    public static function withPath(string $path, array $options = []): EngineAdapter
+    {
+        $loader = new FilesystemLoader($path);
+
+        return EngineAdapter::withLoader($loader);
+    }
+
+    /**
+     * Create a new twig adapter with the given loader and options.
+     *
+     * @param Twig\Loader\LoaderInterface   $loader
+     * @param array                         $options
+     * @return \Ellipse\Adapters\Templating\Twig\EngineAdapter
+     */
+    public static function withLoader(LoaderInterface $loader, array $options = []): EngineAdapter
+    {
+        $twig = new Environment($loader, $options);
+
+        return new EngineAdapter($loader, $twig);
+    }
+
+    /**
+     * Set up a twig adapter with the given filesystem loader and the given
+     * environment.
+     *
+     * @param Twig\Loader\LoaderInterface   $loader
+     * @param \Twig\Environment             $environment
+     */
+    public function __construct(LoaderInterface $loader, Environment $environment)
     {
         $this->loader = $loader;
-        $this->twig = new Environment($loader, $options);
+        $this->environment = $environment;
     }
 
     /**
@@ -49,7 +79,7 @@ class EngineAdapter implements EngineAdapterInterface
      */
     public function registerFunction(string $name, callable $cb): void
     {
-        $this->twig->addFunction(new TwigFunction($name, $cb));
+        $this->environment->addFunction(new TwigFunction($name, $cb));
     }
 
     /**
@@ -57,7 +87,7 @@ class EngineAdapter implements EngineAdapterInterface
      */
     public function registerExtension($extension): void
     {
-        $this->twig->addExtension($extension);
+        $this->environment->addExtension($extension);
     }
 
     /**
@@ -65,6 +95,6 @@ class EngineAdapter implements EngineAdapterInterface
      */
     public function render(string $file, array $data = []): string
     {
-        return $this->twig->render($file, $data);
+        return $this->environment->render($file, $data);
     }
 }
