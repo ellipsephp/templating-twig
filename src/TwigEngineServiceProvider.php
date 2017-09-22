@@ -2,13 +2,13 @@
 
 namespace Ellipse\Adapters\Templating\Twig;
 
-use Interop\Container\ServiceProvider;
+use Interop\Container\ServiceProviderInterface;
 
 use Ellipse\Contracts\Templating\EngineAdapterFactoryInterface;
 
-class TwigEngineServiceProvider implements ServiceProvider
+class TwigEngineServiceProvider implements ServiceProviderInterface
 {
-    public function getServices()
+    public function getFactories()
     {
         return [
             EngineAdapterFactoryInterface::class => function () {
@@ -17,5 +17,10 @@ class TwigEngineServiceProvider implements ServiceProvider
 
             },
         ];
+    }
+
+    public function getExtensions()
+    {
+        //
     }
 }
