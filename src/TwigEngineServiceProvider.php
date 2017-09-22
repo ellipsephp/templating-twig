@@ -21,6 +21,6 @@ class TwigEngineServiceProvider implements ServiceProviderInterface
 
     public function getExtensions()
     {
-        //
+        return [];
     }
 }
